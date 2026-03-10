@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String?
+
+  resumes          Resume[]
+  targetRoles      TargetRole[]
+  careerStories    CareerStory[]
+  candidateProfile CandidateProfile?
+  matches          Match[]
+  jobFeedback      JobFeedback[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Resume {
+  id            String   @id @default(cuid())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
+  storageUrl    String?
+  filename      String
+  mimeType      String
+  extractedText String?
+
+  createdAt DateTime @default(now())
+}
+
+model TargetRole {
+  id          String   @id @default(cuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  title       String
+  company     String?
+  sourceType  String
+  sourceUrl   String?
+  rawText     String?
+  notes       String?
+
+  createdAt DateTime @default(now())
+}
+
+model CareerStory {
+  id          String   @id @default(cuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  promptType  String
+  title       String?
+  rawText     String
+
+  normalizedTitle     String?
+  normalizedNarrative String?
+  impactSummary       String?
+
+  createdAt DateTime @default(now())
+}
+
+model CandidateProfile {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  profileJson Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Job {
+  id              String   @id @default(cuid())
+  source          String
+  sourceJobId     String?
+  canonicalUrl    String?
+  company         String
+  title           String
+  locationText    String?
+  remoteType      String?
+  descriptionText String
+
+  normalized Json?
+
+  postedAt  DateTime?
+  createdAt DateTime @default(now())
+
+  matches     Match[]
+  jobFeedback JobFeedback[]
+}
+
+model Match {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  job    Job    @relation(fields: [jobId], references: [id])
+  jobId  String
+
+  runId          String
+  overallScore   Float
+  titleScore     Float
+  skillsScore    Float
+  seniorityScore Float
+  impactScore    Float
+  locationScore  Float
+
+  explanationJson Json?
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, jobId, runId])
+}
+
+model JobFeedback {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  job    Job    @relation(fields: [jobId], references: [id])
+  jobId  String
+
+  status String
+  reason String?
+
+  createdAt DateTime @default(now())
+}
+
