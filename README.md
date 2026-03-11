@@ -11,3 +11,7 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Cursor + GitHub
+
+To use Cursor with GitHub (agents from issues/PRs, automatic code review, and auto-opening PRs from branches), see [.github/CURSOR_SETUP.md](.github/CURSOR_SETUP.md).
