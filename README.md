@@ -12,6 +12,15 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## Branching
+
+We use **feature → staging → main**. See [docs/branching.md](docs/branching.md) for the full policy.
+
+## What We Will integration
+
+For the server-to-server profile ingest and matching API, see
+[docs/integrations-whatwewill.md](docs/integrations-whatwewill.md).
+
 ## Cursor + GitHub
 
 To use Cursor with GitHub (agents from issues/PRs, automatic code review, and auto-opening PRs from branches), see [.github/CURSOR_SETUP.md](.github/CURSOR_SETUP.md).
