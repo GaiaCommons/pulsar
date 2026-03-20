@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:live": "vitest run src/lib/integrations/whatwewill-brief.live.test.ts",
+    "eval:whatwewill": "tsx scripts/whatwewill-evaluate.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.19.0",
@@ -29,6 +33,8 @@
     "eslint-config-next": "16.1.6",
     "prisma": "^5.19.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "tsx": "^4.19.3",
+    "typescript": "^5",
+    "vitest": "^3.0.5"
   }
 }
