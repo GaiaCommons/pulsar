@@ -35,6 +35,21 @@ export type WhatWeWillMatchResponse = {
   matches: WhatWeWillMatch[];
 };
 
+export type WhatWeWillBriefTone = "supportive" | "direct" | "coach";
+
+export type WhatWeWillBriefRequest = WhatWeWillProfileRequest & {
+  tone?: WhatWeWillBriefTone;
+  maxWords?: number;
+  includeIllustrativeLinks?: boolean;
+};
+
+export type WhatWeWillBriefResponse = {
+  requestId: string;
+  markdown: string;
+  model: string;
+  generatedAt: string;
+};
+
 export type IntegrationErrorCode =
   | "UNAUTHORIZED"
   | "FORBIDDEN"

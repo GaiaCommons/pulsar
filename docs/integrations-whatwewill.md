@@ -1,12 +1,22 @@
 # What We Will integration API
 
-This document describes the v1 server-to-server endpoint that accepts profile
-context from What We Will and returns synchronous job matches.
+This document describes the server-to-server endpoints that accept profile
+context from What We Will and return:
+
+- synchronous ATS job matches, and
+- a broader LLM-generated career brief.
 
 ## Endpoint
 
 - Method: `POST`
 - Path: `/api/integrations/whatwewill/match`
+- Auth header: `x-api-key: <WHATWEWILL_API_KEY>`
+- Content type: `application/json`
+
+## Career brief endpoint
+
+- Method: `POST`
+- Path: `/api/integrations/whatwewill/brief`
 - Auth header: `x-api-key: <WHATWEWILL_API_KEY>`
 - Content type: `application/json`
 
@@ -17,6 +27,8 @@ context from What We Will and returns synchronous job matches.
   Greenhouse board tokens.
 - `WHATWEWILL_LEVER_COMPANIES` or `LEVER_COMPANY_SLUGS`: comma-separated Lever
   company slugs.
+- `OPENAI_API_KEY`: required for `/brief`.
+- `WHATWEWILL_BRIEF_MODEL` (optional): defaults to `gpt-4o-mini`.
 
 Example:
 
@@ -82,4 +94,45 @@ Validation notes:
 - `400 BAD_REQUEST`: invalid payload shape.
 - `413 PAYLOAD_TOO_LARGE`: request exceeds size cap.
 - `500 INTERNAL_ERROR`: unexpected server error.
+
+## Career brief request body
+
+Same profile fields as `/match`, with optional fields:
+
+- `tone`: `supportive | direct | coach`
+- `maxWords`: number (clamped to 250..1200)
+- `includeIllustrativeLinks`: boolean
+
+Example:
+
+```json
+{
+  "personId": "www-12345",
+  "linkedinUrl": "https://www.linkedin.com/in/example-user/",
+  "resumeText": "Senior product-minded backend engineer...",
+  "skills": ["TypeScript", "Node.js", "PostgreSQL", "distributed systems"],
+  "experienceSummary": "8 years in platform and API engineering.",
+  "interestedIndustries": ["climate", "education", "future of work"],
+  "interestedRoleTitles": ["Backend Engineer", "Platform Engineer"],
+  "preferredWorkTypes": ["remote", "hybrid"],
+  "preferredLocations": ["San Francisco", "Remote"],
+  "tone": "supportive",
+  "maxWords": 700,
+  "includeIllustrativeLinks": true
+}
+```
+
+## Career brief success response
+
+```json
+{
+  "requestId": "7d65d6ec-5c76-4f06-9f86-e06f90fd00fc",
+  "markdown": "## Career Snapshot\\n...markdown omitted...",
+  "model": "gpt-4o-mini",
+  "generatedAt": "2026-03-20T10:10:00.000Z"
+}
+```
+
+Note: Career brief content can include illustrative leads that may not currently
+be active postings.
 
