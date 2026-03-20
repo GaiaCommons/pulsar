@@ -136,3 +136,33 @@ Example:
 Note: Career brief content can include illustrative leads that may not currently
 be active postings.
 
+## Tests & local evaluation
+
+**Unit tests (Vitest, no network):**
+
+```bash
+npm test
+```
+
+- `src/lib/integrations/__fixtures__/faux-whatwewill-profile.ts` — synthetic resume + skills aligned with civic tech.
+- Match tests exercise `buildCandidateSignals`, `scoreJob`, `summarizeCandidate`, and ranking on fixture “ATS” jobs.
+- Brief tests assert `buildCareerBriefPrompt` includes required sections and resume content.
+
+**Live OpenAI brief (optional, costs tokens):**
+
+```bash
+OPENAI_API_KEY=... npm run test:live
+```
+
+**Human-readable match + brief output:**
+
+```bash
+# Mock ATS jobs only (no board env)
+npx tsx scripts/whatwewill-evaluate.ts
+
+# Real Greenhouse/Lever + optional brief
+WHATWEWILL_GREENHOUSE_BOARDS=yourboard OPENAI_API_KEY=... npx tsx scripts/whatwewill-evaluate.ts
+```
+
+Use this to judge match ordering and brief quality for the faux profile before changing scoring or prompts.
+

@@ -57,7 +57,7 @@ export async function buildMatchesFromProfile(
   };
 }
 
-function buildCandidateSignals(payload: WhatWeWillProfileRequest): CandidateSignals {
+export function buildCandidateSignals(payload: WhatWeWillProfileRequest): CandidateSignals {
   const roleTitles = dedupeNonEmpty(payload.interestedRoleTitles);
   const skills = dedupeNonEmpty(payload.skills);
   const industries = dedupeNonEmpty(payload.interestedIndustries);
@@ -164,7 +164,7 @@ async function fetchLeverJobs(companySlugs: string[]): Promise<NormalizedAtsJob[
   return allJobs.flat().filter((job) => Boolean(job.canonicalUrl));
 }
 
-function scoreJob(
+export function scoreJob(
   job: NormalizedAtsJob,
   candidate: CandidateSignals
 ): { score: number; match: WhatWeWillMatch } {
@@ -291,7 +291,7 @@ function buildConcern(args: {
   return null;
 }
 
-function summarizeCandidate(
+export function summarizeCandidate(
   payload: WhatWeWillProfileRequest,
   candidate: CandidateSignals
 ): string {

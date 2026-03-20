@@ -19,7 +19,7 @@ export async function generateCareerBrief(
   const maxWords = clampWords(payload.maxWords);
   const includeIllustrativeLinks = payload.includeIllustrativeLinks !== false;
 
-  const prompt = buildPrompt(payload, tone, maxWords, includeIllustrativeLinks);
+  const prompt = buildCareerBriefPrompt(payload, tone, maxWords, includeIllustrativeLinks);
 
   const response = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
@@ -61,12 +61,13 @@ export async function generateCareerBrief(
   return {
     requestId: randomUUID(),
     markdown,
-    model: json.model ?? process.env.WHATWEWILL_BRIEF_MODEL || DEFAULT_MODEL,
+    model: json.model ?? (process.env.WHATWEWILL_BRIEF_MODEL || DEFAULT_MODEL),
     generatedAt: new Date().toISOString(),
   };
 }
 
-function buildPrompt(
+/** Exported for tests and prompt inspection. */
+export function buildCareerBriefPrompt(
   payload: WhatWeWillBriefRequest,
   tone: WhatWeWillBriefTone,
   maxWords: number,
